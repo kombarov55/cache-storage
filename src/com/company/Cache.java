@@ -1,69 +1,41 @@
 package com.company;
 
-import com.company.filesystemimpl.FilesystemCacheStorage;
-import com.company.memoryimpl.MemoryCacheStorage;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 /**
- * Входной класс для получения реализации кеширования.
+ * Интерфейс кеша.
  */
-public class Cache {
+public interface Cache {
 
-    private static final String PROP_FILE_PATH = "./conf/cache.properties";
+    /**
+     * Положить объект в кеш.
+     * @param obj объект.
+     * @param id идентификатор.
+     */
+    void put(int id, Object obj);
 
-    private static int level;
-    private static String cacheDir;
-    private static boolean persistent;
-    private static long maxCacheSize;
+    /**
+     * Положить объект в кеш. В качестве идентификатора будет использоваться hashcode
+     * @param obj объект.
+     */
+    void put(Object obj);
 
-    private static CacheStorage instance;
+    /**
+     * Получить объект из кеша.
+     * @param id хеш-код объекта
+     * @param type тип объекта, который необходимо получить
+     * @return ссылка на объект если он есть, или null если его нет в кеше.
+     */
+    <T> T get(int id, Class<T> type);
 
-    private Cache() { }
+    /**
+     * Удалить объект из кеша.
+     *
+     * @param id идентификатор объекта.
+     * @return был или не был закеширован объект.
+     */
+    boolean remove(int id);
 
-    public static CacheStorage getInstance() {
-        if (instance == null) {
-            instance = instantiate();
-        }
-
-        return instance;
-    }
-
-    private static CacheStorage instantiate() {
-        try {
-            loadConfig(PROP_FILE_PATH);
-            validateConfig();
-
-            switch (level) {
-                case 1:
-                    return new MemoryCacheStorage(maxCacheSize, persistent);
-                case 2:
-                    return new FilesystemCacheStorage(maxCacheSize, cacheDir, persistent);
-                default:
-                    return new MemoryCacheStorage(maxCacheSize, persistent);
-            }
-
-
-        } catch (IOException e) {
-            System.err.println(Cache.class.getCanonicalName() + ": Не удалось считать конфигурацию из " + PROP_FILE_PATH);
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private static void loadConfig(String path) throws IOException {
-        Properties p = new Properties();
-        p.load(new FileInputStream(path));
-
-        level = Integer.parseInt((String) p.getOrDefault("level", "1"));
-        cacheDir = (String) p.getOrDefault("cache-dir", "./cache");
-        persistent = Boolean.parseBoolean((String) p.getOrDefault("persistent", "false"));
-        maxCacheSize = Utils.resolveSize((String) p.getOrDefault("max-cache-size", "10Kb"));
-    }
-
-    private static void validateConfig() {
-        if (level != 1 && level != 2) throw new RuntimeException("Уровень кеша должен быть 1 или 2");
-    }
+    /**
+     * Очистить кеш.
+     */
+    void clear();
 }

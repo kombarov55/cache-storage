@@ -1,17 +1,17 @@
 package com.company.filesystemimpl;
 
-import com.company.CacheStorage;
+import com.company.Cache;
 
 import java.io.IOException;
 
-public class FilesystemCacheStorage implements CacheStorage {
+public class FilesystemCache implements Cache {
 
     private final long maxCacheSize;
     private final boolean persistent;
 
     private FileHandler fileHandler;
 
-    public FilesystemCacheStorage(long maxCacheSize, String cacheDir, boolean persistent) {
+    public FilesystemCache(long maxCacheSize, String cacheDir, boolean persistent) {
         this.maxCacheSize = maxCacheSize;
         this.persistent = persistent;
 
@@ -20,7 +20,7 @@ public class FilesystemCacheStorage implements CacheStorage {
     }
 
     @Override
-    public void put(Object obj, long id) {
+    public void put(int id, Object obj) {
         try {
             String data = Marshaller.marshalize(obj);
             fileHandler.writeData(data, id);
@@ -31,7 +31,7 @@ public class FilesystemCacheStorage implements CacheStorage {
 
     @Override
     public void put(Object obj) {
-        put(obj, obj.hashCode());
+        put(obj.hashCode(), obj);
     }
 
     @Override

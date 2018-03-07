@@ -1,7 +1,5 @@
 package com.company;
 
-import com.company.memoryimpl.ObjectSizeChecker;
-
 public class Main {
 
     public static class TestClass {
@@ -13,7 +11,7 @@ public class Main {
         @Override
         public String toString() {
             return new StringBuilder("{a=").append(a)
-                    .append(",\tb=").append("b")
+                    .append(",\tb=").append(b)
                     .append(",\tstr=").append(str)
                     .append("}")
                     .toString();
@@ -22,15 +20,27 @@ public class Main {
 
     public static void main(String[] args) {
 
-        CacheStorage cache = Cache.getInstance();
+        Cache cache = CacheStorage.getInstance();
 
 
 
         TestClass c = new TestClass();
 
+        cache.put(new TestClass());
+        cache.put(new TestClass());
+        cache.put(new TestClass());
+        cache.put(new TestClass());
+        cache.put(new TestClass());
+        cache.put(new TestClass());
         cache.put(c);
+
         TestClass cc = cache.get(c.hashCode(), TestClass.class);
 
         System.out.println(cc);
+
+        cache.clear();
+
+        cache.put(c);
+        System.out.println(cache.get(c.hashCode(), TestClass.class));
     }
 }
