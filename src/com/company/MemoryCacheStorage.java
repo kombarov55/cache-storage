@@ -21,8 +21,8 @@ public class MemoryCacheStorage implements CacheStorage {
     }
 
     @Override
-    public Object get(int hashcode) {
-        return cache.get(hashcode);
+    public <T> T get(int hashcode, Class<T> type) {
+        return type.cast(cache.get(hashcode));
     }
 
     @Override

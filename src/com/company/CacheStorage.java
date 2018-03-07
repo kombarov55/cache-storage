@@ -14,9 +14,10 @@ public interface CacheStorage {
     /**
      * Получить объект из кеша.
      * @param hashcode хеш-код объекта
+     * @param type тип объекта, который необходимо получить
      * @return ссылка на объект если он есть, или null если его нет в кеше.
      */
-    Object get(int hashcode);
+    <T> T get(int hashcode, Class<T> type);
 
     /**
      * Удалить объект из кеша.

@@ -1,49 +1,40 @@
 package com.company;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.List;
 
 public class FilesystemCacheStorage implements CacheStorage {
 
     private final boolean persistent;
-    private final String cacheDir;
 
     private Marshaller marshaller = new Marshaller();
+    private FileHandler fileHandler;
 
-    FilesystemCacheStorage(boolean persistent, String cacheDir) {
+    FilesystemCacheStorage(boolean persistent, String cacheDir) throws IOException {
         this.persistent = persistent;
-        this.cacheDir = cacheDir;
+        fileHandler = new FileHandler(cacheDir);
 
-        createDirIfNeeded();
+        fileHandler.setupDir();
     }
 
     @Override
     public void put(Object obj) {
-        String data = marshaller.marshalize(obj);
-
         try {
-            Files.write(
-                    Paths.get(cacheDir + "/" + marshaller.pickId(obj)),
-                    data.getBytes(),
-                    StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-
+            String data = marshaller.marshalize(obj);
+            fileHandler.writeData(data, obj.hashCode());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public Object get(int hashcode) {
+    public <T> T get(int hashcode, Class<T> type) {
         try {
-            byte[] bytes = Files.readAllBytes(Paths.get(cacheDir + "/" + hashcode));
 
-            return marshaller.demarshalize(new String(bytes));
+            String data = fileHandler.readData(hashcode);
 
-        } catch (IOException e) {
+            return marshaller.demarshalize(data, type);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -60,11 +51,6 @@ public class FilesystemCacheStorage implements CacheStorage {
 
     }
 
-    private void createDirIfNeeded() {
-        File dir = new File(cacheDir);
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-    }
+
 
 }

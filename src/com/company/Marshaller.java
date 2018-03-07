@@ -1,6 +1,9 @@
 package com.company;
 
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Маршализация / демаршализация объектов
@@ -30,14 +33,76 @@ public class Marshaller {
         return sb.toString();
     }
 
-    public Object demarshalize(String str) {
-        return new Object();
+    public <T> T demarshalize(String str, Class<T> type) throws Exception {
+        T t = type.newInstance();
+
+        // разложить строку в мап
+        String[] pairs = str.split("\t");
+
+        Map<String, String> fieldnameToValue = new HashMap<>(pairs.length / 2);
+
+        for (String pair : pairs) {
+            String[] parts = pair.split("=");
+            String fieldName = parts[0];
+            String fieldValue = parts[1];
+
+            fieldnameToValue.put(fieldName, fieldValue);
+        }
+
+
+        // у каждого поля выставить значение
+
+        for (Field field : type.getDeclaredFields()) {
+            String value = fieldnameToValue.get(field.getName());
+
+            Object castedValue = castValue(field.getType(), value);
+
+            field.set(t, castedValue);
+        }
+
+
+        return t;
     }
 
-    public int pickId(Object obj) {
-        return obj.hashCode();
+
+    private Object castValue(Class<?> type, String value) {
+        switch (type.getSimpleName()) {
+            case "String":
+                return value;
+            case "boolean":
+                return Boolean.parseBoolean(value);
+            case "byte":
+                return Byte.parseByte(value);
+            case "short":
+                return Short.parseShort(value);
+            case "int":
+                return Integer.parseInt(value);
+            case "long":
+                return Long.parseLong(value);
+            case "float":
+                return Float.parseFloat(value);
+            case "double":
+                return Double.parseDouble(value);
+
+            case "Boolean":
+                return Boolean.parseBoolean(value);
+            case "Byte":
+                return Byte.parseByte(value);
+            case "Short":
+                return Short.parseShort(value);
+            case "Integer":
+                return Integer.parseInt(value);
+            case "Long":
+                return Long.parseLong(value);
+            case "Float":
+                return Float.parseFloat(value);
+            case "Double":
+                return Double.parseDouble(value);
+
+            default:
+                return null;
+
+        }
     }
-
-
 
 }
