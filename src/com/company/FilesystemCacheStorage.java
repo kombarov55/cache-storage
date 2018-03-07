@@ -2,7 +2,7 @@ package com.company;
 
 public class FilesystemCacheStorage implements CacheStorage {
 
-    private final String filename = "cache";
+    private static final String filename = "cache";
     private final boolean persistent;
     private final String cacheDir;
 
@@ -21,4 +21,13 @@ public class FilesystemCacheStorage implements CacheStorage {
         return null;
     }
 
+    @Override
+    public boolean remove(int hashcode) {
+        return false;
+    }
+
+    @Override
+    public void clear() {
+
+    }
 }

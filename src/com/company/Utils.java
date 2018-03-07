@@ -22,6 +22,7 @@ public class Utils {
     private static Map<String, Integer> sizeSuffixToMultiplier = new HashMap<>();
 
     static {
+        sizeSuffixToMultiplier.put("", 1);
         sizeSuffixToMultiplier.put("b", 1);
         sizeSuffixToMultiplier.put("kb", 1024);
         sizeSuffixToMultiplier.put("mb", 1024 * 1024);

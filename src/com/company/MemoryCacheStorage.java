@@ -30,6 +30,11 @@ public class MemoryCacheStorage implements CacheStorage {
         return cache.remove(hashcode) != null;
     }
 
+    @Override
+    public void clear() {
+        cache.clear();
+    }
+
     //TODO: реалзизовать
     private boolean memoryCheck() {
         return true;

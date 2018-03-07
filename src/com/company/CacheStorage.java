@@ -25,4 +25,9 @@ public interface CacheStorage {
      * @return был или не был закеширован объект
      */
     boolean remove(int hashcode);
+
+    /**
+     * Очистить кеш.
+     */
+    void clear();
 }
