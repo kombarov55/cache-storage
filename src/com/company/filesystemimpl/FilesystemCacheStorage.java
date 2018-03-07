@@ -6,15 +6,14 @@ import java.io.IOException;
 
 public class FilesystemCacheStorage implements CacheStorage {
 
-    private final boolean persistent;
+    private final long cacheSize;
 
     private Marshaller marshaller = new Marshaller();
     private FileHandler fileHandler;
 
-    public FilesystemCacheStorage(boolean persistent, String cacheDir) {
-        this.persistent = persistent;
+    public FilesystemCacheStorage(long cacheSize, String cacheDir) {
+        this.cacheSize = cacheSize;
         fileHandler = new FileHandler(cacheDir);
-
         fileHandler.setupDir();
     }
 
@@ -31,11 +30,8 @@ public class FilesystemCacheStorage implements CacheStorage {
     @Override
     public <T> T get(int hashcode, Class<T> type) {
         try {
-
             String data = fileHandler.readData(hashcode);
-
             return marshaller.demarshalize(data, type);
-
         } catch (Exception e) {
             e.printStackTrace();
         }

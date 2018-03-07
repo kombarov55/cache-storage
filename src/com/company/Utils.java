@@ -5,19 +5,7 @@ import java.util.Map;
 
 public class Utils {
 
-    private Utils() {
-    }
-
-    /**
-     * Получить значение. Если value равна null, возвращает значение по умолчанию.
-     *
-     * @return value если оно действительно, иначе def.
-     */
-    public static <T> T getWithDefault(Object value, T def) {
-        return value != null ?
-                (T) value :
-                def;
-    }
+    private Utils() { }
 
     private static Map<String, Integer> sizeSuffixToMultiplier = new HashMap<>();
 

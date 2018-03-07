@@ -16,7 +16,7 @@ public class Cache {
 
     private static int level;
     private static String cacheDir;
-    private static boolean persistent;
+
     private static long cacheSize;
 
     private static CacheStorage instance;
@@ -36,9 +36,15 @@ public class Cache {
             loadConfig(PROP_FILE_PATH);
             validateConfig();
 
-            return level == 2 ?
-                    new FilesystemCacheStorage(persistent, cacheDir) :
-                    new MemoryCacheStorage(cacheSize);
+            switch (level) {
+                case 1:
+                    return new MemoryCacheStorage(cacheSize);
+                case 2:
+                    return new FilesystemCacheStorage(cacheSize, cacheDir);
+                default:
+                    return new MemoryCacheStorage(cacheSize);
+            }
+
 
         } catch (IOException e) {
             System.err.println(Cache.class.getCanonicalName() + ": Не удалось считать конфигурацию из " + PROP_FILE_PATH);
@@ -51,12 +57,9 @@ public class Cache {
         Properties p = new Properties();
         p.load(new FileInputStream(path));
 
-        level = Integer.parseInt(Utils.getWithDefault(p.get("level"), "1"));
-        cacheDir = Utils.getWithDefault(p.get("cache-dir"), "./cache");
-        persistent = Boolean.parseBoolean(Utils.getWithDefault(p.get("persistent"), "false"));
-
-        String cacheSizeStr = (Utils.getWithDefault(p.get("cache-size"), "10Kb"));
-        cacheSize = Utils.resolveSize(cacheSizeStr);
+        level = Integer.parseInt((String) p.getOrDefault("level", "1"));
+        cacheDir = (String) p.getOrDefault("cache-dir", "./cache");
+        cacheSize = Utils.resolveSize((String) p.getOrDefault("cache-size", "10Kb"));
     }
 
     private static void validateConfig() {
