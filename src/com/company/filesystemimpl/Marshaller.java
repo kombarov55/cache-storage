@@ -66,6 +66,8 @@ public class Marshaller {
 
 
     private Object castValue(Class<?> type, String value) {
+        if (value == null) return null;
+
         switch (type.getSimpleName()) {
             case "String":
                 return value;
