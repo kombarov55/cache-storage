@@ -17,7 +17,7 @@ public class Cache {
     private static int level;
     private static String cacheDir;
     private static boolean persistent;
-    private static long cacheSize;
+    private static long maxCacheSize;
 
     private static CacheStorage instance;
 
@@ -38,11 +38,11 @@ public class Cache {
 
             switch (level) {
                 case 1:
-                    return new MemoryCacheStorage(cacheSize, persistent);
+                    return new MemoryCacheStorage(maxCacheSize, persistent);
                 case 2:
-                    return new FilesystemCacheStorage(cacheSize, cacheDir, persistent);
+                    return new FilesystemCacheStorage(maxCacheSize, cacheDir, persistent);
                 default:
-                    return new MemoryCacheStorage(cacheSize, persistent);
+                    return new MemoryCacheStorage(maxCacheSize, persistent);
             }
 
 
@@ -60,7 +60,7 @@ public class Cache {
         level = Integer.parseInt((String) p.getOrDefault("level", "1"));
         cacheDir = (String) p.getOrDefault("cache-dir", "./cache");
         persistent = Boolean.parseBoolean((String) p.getOrDefault("persistent", "false"));
-        cacheSize = Utils.resolveSize((String) p.getOrDefault("cache-size", "10Kb"));
+        maxCacheSize = Utils.resolveSize((String) p.getOrDefault("max-cache-size", "10Kb"));
     }
 
     private static void validateConfig() {

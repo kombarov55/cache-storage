@@ -1,5 +1,7 @@
 package com.company.filesystemimpl;
 
+import com.company.memoryimpl.ObjectSizeChecker;
+
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.util.HashMap;
@@ -10,7 +12,9 @@ import java.util.Map;
  */
 public class Marshaller {
 
-    public String marshalize(Object object) {
+    private Marshaller() { }
+
+    public static String marshalize(Object object) {
         StringBuilder sb = new StringBuilder();
 
         try {
@@ -31,7 +35,7 @@ public class Marshaller {
         return sb.toString();
     }
 
-    public <T> T demarshalize(String str, Class<T> type) throws Exception {
+    public static <T> T demarshalize(String str, Class<T> type) throws Exception {
         if (str == null || str.isEmpty()) return null;
 
         T t = type.newInstance();
@@ -65,41 +69,28 @@ public class Marshaller {
     }
 
 
-    private Object castValue(Class<?> type, String value) {
+    private static Object castValue(Class<?> type, String value) {
         if (value == null) return null;
 
         switch (type.getSimpleName()) {
-            case "String":
-                return value;
-            case "boolean":
-                return Boolean.parseBoolean(value);
-            case "byte":
-                return Byte.parseByte(value);
-            case "short":
-                return Short.parseShort(value);
-            case "int":
-                return Integer.parseInt(value);
-            case "long":
-                return Long.parseLong(value);
-            case "float":
-                return Float.parseFloat(value);
-            case "double":
-                return Double.parseDouble(value);
+            case "String": return value;
+            case "boolean": return Boolean.parseBoolean(value);
+            case "byte": return Byte.parseByte(value);
+            case "short": return Short.parseShort(value);
+            case "char": return value.charAt(0);
+            case "int": return Integer.parseInt(value);
+            case "long": return Long.parseLong(value);
+            case "float": return Float.parseFloat(value);
+            case "double": return Double.parseDouble(value);
 
-            case "Boolean":
-                return Boolean.parseBoolean(value);
-            case "Byte":
-                return Byte.parseByte(value);
-            case "Short":
-                return Short.parseShort(value);
-            case "Integer":
-                return Integer.parseInt(value);
-            case "Long":
-                return Long.parseLong(value);
-            case "Float":
-                return Float.parseFloat(value);
-            case "Double":
-                return Double.parseDouble(value);
+            case "Boolean": return Boolean.parseBoolean(value);
+            case "Byte": return Byte.parseByte(value);
+            case "Short": return Short.parseShort(value);
+            case "Character": return value.charAt(0);
+            case "Integer": return Integer.parseInt(value);
+            case "Long": return Long.parseLong(value);
+            case "Float": return Float.parseFloat(value);
+            case "Double": return Double.parseDouble(value);
 
             default:
                 return null;

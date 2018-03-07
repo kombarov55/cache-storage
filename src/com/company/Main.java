@@ -1,5 +1,7 @@
 package com.company;
 
+import com.company.memoryimpl.ObjectSizeChecker;
+
 public class Main {
 
     public static class TestClass {
@@ -19,7 +21,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        System.out.println(System.getProperty("java.io.tmpdir"));
 
         CacheStorage cache = Cache.getInstance();
 

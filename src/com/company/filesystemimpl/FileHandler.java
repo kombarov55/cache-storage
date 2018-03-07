@@ -44,4 +44,8 @@ public class FileHandler {
 
     public void clearDir() {
     }
+
+    public long getDirSize() throws IOException {
+        return Files.size(Paths.get(cacheDir));
+    }
 }

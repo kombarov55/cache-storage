@@ -6,14 +6,13 @@ import java.io.IOException;
 
 public class FilesystemCacheStorage implements CacheStorage {
 
-    private final long cacheSize;
+    private final long maxCacheSize;
     private final boolean persistent;
 
-    private Marshaller marshaller = new Marshaller();
     private FileHandler fileHandler;
 
-    public FilesystemCacheStorage(long cacheSize, String cacheDir, boolean persistent) {
-        this.cacheSize = cacheSize;
+    public FilesystemCacheStorage(long maxCacheSize, String cacheDir, boolean persistent) {
+        this.maxCacheSize = maxCacheSize;
         this.persistent = persistent;
 
         fileHandler = new FileHandler(cacheDir);
@@ -23,7 +22,7 @@ public class FilesystemCacheStorage implements CacheStorage {
     @Override
     public void put(Object obj, long id) {
         try {
-            String data = marshaller.marshalize(obj);
+            String data = Marshaller.marshalize(obj);
             fileHandler.writeData(data, id);
         } catch (IOException e) {
             e.printStackTrace();
@@ -39,7 +38,7 @@ public class FilesystemCacheStorage implements CacheStorage {
     public <T> T get(int id, Class<T> type) {
         try {
             String data = fileHandler.readData(id);
-            return marshaller.demarshalize(data, type);
+            return Marshaller.demarshalize(data, type);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,6 +56,9 @@ public class FilesystemCacheStorage implements CacheStorage {
         fileHandler.clearDir();
     }
 
+    private boolean memoryCheck() throws IOException {
+        return fileHandler.getDirSize() > maxCacheSize;
+    }
 
 
 }

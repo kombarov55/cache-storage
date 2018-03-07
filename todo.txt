@@ -10,8 +10,6 @@
       . Использовать java.lang.Instrumentation
       . Приблизительный подсчёт на основе статьи на хабре
       . Используя System.totalMemory() - System.freeMemory()
-  . Filesystem:
-    . Использовать file.length()
 
 5. Выбрасывать exception на уровне интерфейса во время IO исключений и нехватки места.
 6. Обработка ошибок
