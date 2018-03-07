@@ -35,12 +35,11 @@ public class Marshaller {
     public static <T> T demarshalize(String str, Class<T> type) throws Exception {
         if (str == null || str.isEmpty()) return null;
 
-        T t = type.newInstance();
+        T obj = type.newInstance();
 
-        // разложить строку в мап
         String[] pairs = str.split("\t");
 
-        Map<String, String> fieldnameToValue = new HashMap<>(pairs.length / 2);
+        Map<String, String> fieldnameToValue = new HashMap<>(pairs.length * 2);
 
         for (String pair : pairs) {
             String[] parts = pair.split("=");
@@ -50,19 +49,18 @@ public class Marshaller {
             fieldnameToValue.put(fieldName, fieldValue);
         }
 
-        // у каждого поля выставить значение
-
+        
         for (Field field : type.getDeclaredFields()) {
             field.setAccessible(true);
 
             String value = fieldnameToValue.get(field.getName());
             Object castedValue = castValue(field.getType(), value);
 
-            field.set(t, castedValue);
+            field.set(obj, castedValue);
         }
 
 
-        return t;
+        return obj;
     }
 
 
