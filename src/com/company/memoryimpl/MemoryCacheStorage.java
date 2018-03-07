@@ -9,27 +9,34 @@ public class MemoryCacheStorage implements CacheStorage {
 
     private Map<Integer, Object> cache = new HashMap<>();
 
-    private long cacheSize;
+    private final long cacheSize;
+    private final boolean persistent;
 
-    public MemoryCacheStorage(long cacheSize) {
+    public MemoryCacheStorage(long cacheSize, boolean persistent) {
         this.cacheSize = cacheSize;
+        this.persistent = persistent;
     }
 
     @Override
-    public void put(Object obj) {
+    public void put(Object obj, long id) {
         if (memoryCheck()) {
-            cache.put(obj.hashCode(), obj);
+            cache.put(obj.hashCode(), id);
         }
     }
 
     @Override
-    public <T> T get(int hashcode, Class<T> type) {
-        return type.cast(cache.get(hashcode));
+    public void put(Object obj) {
+        put(obj, obj.hashCode());
     }
 
     @Override
-    public boolean remove(int hashcode) {
-        return cache.remove(hashcode) != null;
+    public <T> T get(int id, Class<T> type) {
+        return type.cast(cache.get(id));
+    }
+
+    @Override
+    public boolean remove(int id) {
+        return cache.remove(id) != null;
     }
 
     @Override

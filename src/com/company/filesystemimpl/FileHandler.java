@@ -17,7 +17,7 @@ public class FileHandler {
         this.cacheDir = cacheDir;
     }
 
-    public void writeData(String data, int hashcode) throws IOException {
+    public void writeData(String data, long hashcode) throws IOException {
         Files.write(
                 Paths.get(cacheDir + "/" + hashcode),
                 data.getBytes(),

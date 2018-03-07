@@ -7,30 +7,38 @@ import java.io.IOException;
 public class FilesystemCacheStorage implements CacheStorage {
 
     private final long cacheSize;
+    private final boolean persistent;
 
     private Marshaller marshaller = new Marshaller();
     private FileHandler fileHandler;
 
-    public FilesystemCacheStorage(long cacheSize, String cacheDir) {
+    public FilesystemCacheStorage(long cacheSize, String cacheDir, boolean persistent) {
         this.cacheSize = cacheSize;
+        this.persistent = persistent;
+
         fileHandler = new FileHandler(cacheDir);
         fileHandler.setupDir();
     }
 
     @Override
-    public void put(Object obj) {
+    public void put(Object obj, long id) {
         try {
             String data = marshaller.marshalize(obj);
-            fileHandler.writeData(data, obj.hashCode());
+            fileHandler.writeData(data, id);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public <T> T get(int hashcode, Class<T> type) {
+    public void put(Object obj) {
+        put(obj, obj.hashCode());
+    }
+
+    @Override
+    public <T> T get(int id, Class<T> type) {
         try {
-            String data = fileHandler.readData(hashcode);
+            String data = fileHandler.readData(id);
             return marshaller.demarshalize(data, type);
         } catch (Exception e) {
             e.printStackTrace();
@@ -40,8 +48,8 @@ public class FilesystemCacheStorage implements CacheStorage {
     }
 
     @Override
-    public boolean remove(int hashcode) {
-        return fileHandler.removeFile(hashcode);
+    public boolean remove(int id) {
+        return fileHandler.removeFile(id);
     }
 
     @Override

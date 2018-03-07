@@ -14,7 +14,6 @@ public class Marshaller {
         StringBuilder sb = new StringBuilder();
 
         try {
-
             for (Field field : object.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 sb
@@ -23,7 +22,6 @@ public class Marshaller {
                         .append(field.get(object));
 
                 sb.append("\t");
-
             }
 
         } catch (IllegalAccessException e) {
@@ -34,6 +32,8 @@ public class Marshaller {
     }
 
     public <T> T demarshalize(String str, Class<T> type) throws Exception {
+        if (str == null || str.isEmpty()) return null;
+
         T t = type.newInstance();
 
         // разложить строку в мап
@@ -49,12 +49,12 @@ public class Marshaller {
             fieldnameToValue.put(fieldName, fieldValue);
         }
 
-
         // у каждого поля выставить значение
 
         for (Field field : type.getDeclaredFields()) {
-            String value = fieldnameToValue.get(field.getName());
+            field.setAccessible(true);
 
+            String value = fieldnameToValue.get(field.getName());
             Object castedValue = castValue(field.getType(), value);
 
             field.set(t, castedValue);
