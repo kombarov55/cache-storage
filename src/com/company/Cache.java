@@ -11,7 +11,7 @@ public class Cache {
 
     private static final String PROP_FILE_PATH = "./conf/cache.properties";
 
-    private static int level = 1;
+    private static int level;
     private static String cacheDir;
     private static boolean persistent;
     private static long cacheSize;
@@ -52,7 +52,7 @@ public class Cache {
         cacheDir = Utils.getWithDefault(p.get("cache-dir"), "./cache");
         persistent = Boolean.parseBoolean(Utils.getWithDefault(p.get("persistent"), "false"));
 
-        String cacheSizeStr = (Utils.getWithDefault(p.get("cache-size"), "" + 1024 * 10));
+        String cacheSizeStr = (Utils.getWithDefault(p.get("cache-size"), "10Kb"));
         cacheSize = Utils.resolveSize(cacheSizeStr);
     }
 
