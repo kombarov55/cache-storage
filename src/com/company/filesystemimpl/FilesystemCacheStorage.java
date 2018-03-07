@@ -1,4 +1,6 @@
-package com.company;
+package com.company.filesystemimpl;
+
+import com.company.CacheStorage;
 
 import java.io.IOException;
 
@@ -9,7 +11,7 @@ public class FilesystemCacheStorage implements CacheStorage {
     private Marshaller marshaller = new Marshaller();
     private FileHandler fileHandler;
 
-    FilesystemCacheStorage(boolean persistent, String cacheDir) throws IOException {
+    public FilesystemCacheStorage(boolean persistent, String cacheDir) {
         this.persistent = persistent;
         fileHandler = new FileHandler(cacheDir);
 
@@ -43,12 +45,12 @@ public class FilesystemCacheStorage implements CacheStorage {
 
     @Override
     public boolean remove(int hashcode) {
-        return false;
+        return fileHandler.removeFile(hashcode);
     }
 
     @Override
     public void clear() {
-
+        fileHandler.clearDir();
     }
 
 

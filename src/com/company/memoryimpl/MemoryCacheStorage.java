@@ -1,4 +1,6 @@
-package com.company;
+package com.company.memoryimpl;
+
+import com.company.CacheStorage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +11,7 @@ public class MemoryCacheStorage implements CacheStorage {
 
     private long cacheSize;
 
-    MemoryCacheStorage(long cacheSize) {
+    public MemoryCacheStorage(long cacheSize) {
         this.cacheSize = cacheSize;
     }
 

@@ -1,5 +1,8 @@
 package com.company;
 
+import com.company.filesystemimpl.FilesystemCacheStorage;
+import com.company.memoryimpl.MemoryCacheStorage;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;

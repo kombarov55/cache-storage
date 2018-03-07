@@ -1,4 +1,4 @@
-package com.company;
+package com.company.filesystemimpl;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,11 +6,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
+/**
+ * Операции с файлами
+ */
 public class FileHandler {
 
     private String cacheDir;
 
-    public FileHandler(String cacheDir) {
+    FileHandler(String cacheDir) {
         this.cacheDir = cacheDir;
     }
 
@@ -27,7 +30,11 @@ public class FileHandler {
         return new String(bytes);
     }
 
-    public void setupDir() throws IOException {
+    public boolean removeFile(int hashcode) {
+        return new File(cacheDir + "/" + hashcode).delete();
+    }
+
+    public void setupDir() {
         File dir = new File(cacheDir);
 
         dir.mkdir();
@@ -35,4 +42,6 @@ public class FileHandler {
 
     }
 
+    public void clearDir() {
+    }
 }
