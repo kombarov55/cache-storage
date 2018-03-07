@@ -39,16 +39,10 @@ public class ObjectSizeChecker {
             return getArraySize(obj);
         }
 
-        List<Field> instanceFields = Arrays.stream(type.getDeclaredFields())
-                .filter(field -> !Modifier.isStatic(field.getModifiers()))
-                .collect(Collectors.toList());
-
-
-        for (Field field : instanceFields) {
-
-            field.setAccessible(true);
+        for (Field field : type.getDeclaredFields()) {
+            if (Modifier.isStatic(field.getModifiers())) continue;
+            
             if (field.getType().isPrimitive()) {
-
                 totalSize += PRIMITIVE_SIZES.get(field.getType().getSimpleName());
             } else {
                 totalSize += REF_SIZE;
@@ -61,10 +55,10 @@ public class ObjectSizeChecker {
 
 
     private static int getArraySize(Object array) throws Exception {
-        int arraySize = Array.getLength(array);
-        if (arraySize == 0) return HEADER_SIZE;
-
         int totalSize = HEADER_SIZE + ARRAY_LENGTH_VAR_SIZE;
+        int arrayLength = Array.getLength(array);
+        
+        if (arrayLength == 0) return totalSize;
 
         String typeName = array.getClass().getSimpleName();
         String elementName = typeName.substring(0, typeName.length() - 2);
@@ -75,7 +69,7 @@ public class ObjectSizeChecker {
             elementSize = getObjectSize(Array.get(array, 0));
         }
 
-        return justificate(totalSize + elementSize * Array.getLength(array));
+        return justificate(totalSize + elementSize * arrayLength);
     }
 
 
