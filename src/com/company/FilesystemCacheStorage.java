@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 
 public class FilesystemCacheStorage implements CacheStorage {
 
@@ -25,7 +26,11 @@ public class FilesystemCacheStorage implements CacheStorage {
         String data = marshaller.marshalize(obj);
 
         try {
-            writeToFileStorage(data, obj.hashCode());
+            Files.write(
+                    Paths.get(cacheDir + "/" + marshaller.pickId(obj)),
+                    data.getBytes(),
+                    StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -34,9 +39,10 @@ public class FilesystemCacheStorage implements CacheStorage {
     @Override
     public Object get(int hashcode) {
         try {
-            String data = readFromFileStorage(hashcode);
+            byte[] bytes = Files.readAllBytes(Paths.get(cacheDir + "/" + hashcode));
 
-            return marshaller.demarshalize(data);
+            return marshaller.demarshalize(new String(bytes));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,14 +67,4 @@ public class FilesystemCacheStorage implements CacheStorage {
         }
     }
 
-    private void writeToFileStorage(String data, int hashcode) throws IOException {
-        Files.write(
-                Paths.get(cacheDir + "/" + hashcode),
-                data.getBytes(),
-                StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-    }
-
-    private String readFromFileStorage(int hashcode) throws IOException {
-        return Files.readAllLines(Paths.get(cacheDir + "/" + hashcode)).get(0);
-    }
 }

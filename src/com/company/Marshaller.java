@@ -34,6 +34,10 @@ public class Marshaller {
         return new Object();
     }
 
+    public int pickId(Object obj) {
+        return obj.hashCode();
+    }
+
 
 
 }
