@@ -12,7 +12,7 @@ import java.util.Properties;
  */
 public class CacheStorage {
 
-    private static final String PROP_FILE_PATH = "./conf/cache.properties";
+    private static final String PROP_FILE_PATH = "./cache.properties";
 
     private static int level;
     private static String cacheDir;
