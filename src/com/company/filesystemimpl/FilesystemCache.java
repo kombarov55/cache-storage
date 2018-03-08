@@ -25,7 +25,7 @@ public class FilesystemCache implements Cache {
 
 
     @Override
-    public boolean put(String id, Object obj) {
+    public boolean put(Object id, Object obj) {
         try {
             String data = Marshaller.marshalize(obj);
 
@@ -52,7 +52,7 @@ public class FilesystemCache implements Cache {
     }
 
     @Override
-    public <T> T get(String id, Class<T> type) {
+    public <T> T get(Object id, Class<T> type) {
         try {
             String data = fileHandler.readData(id);
             return Marshaller.demarshalize(data, type);
@@ -65,7 +65,7 @@ public class FilesystemCache implements Cache {
     }
 
     @Override
-    public boolean remove(String id) {
+    public boolean remove(Object id) {
         currentCacheSize -= fileHandler.getFileSize(id);
         return fileHandler.removeFile(id);
     }

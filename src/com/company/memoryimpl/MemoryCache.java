@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class MemoryCache implements Cache {
 
-    private Map<String, Object> cache = new HashMap<>();
+    private Map<Object, Object> cache = new HashMap<>();
 
     private final long maxCacheSize;
 
@@ -19,7 +19,7 @@ public class MemoryCache implements Cache {
     }
 
     @Override
-    public boolean put(String id, Object obj) {
+    public boolean put(Object id, Object obj) {
         int objSize = MemSizeHelper.getObjectSize(obj);
         if (memoryCheck(objSize)) {
             boolean result = cache.put(id, obj) != null;
@@ -33,16 +33,16 @@ public class MemoryCache implements Cache {
 
     @Override
     public boolean put(Object obj) {
-        return put("" + obj.hashCode(), obj);
+        return put(obj.hashCode(), obj);
     }
 
     @Override
-    public <T> T get(String id, Class<T> type) {
+    public <T> T get(Object id, Class<T> type) {
         return type.cast(cache.get(id));
     }
 
     @Override
-    public boolean remove(String id) {
+    public boolean remove(Object id) {
         Object deletedObj = cache.remove(id);
         if (deletedObj == null) return false;
         currentCacheSize -= MemSizeHelper.getObjectSize(deletedObj);

@@ -21,7 +21,7 @@ public class Main {
         cache.put(c);
 
         System.out.println(cache.size());
-        System.out.println(cache.get("" + c.hashCode(), TestClass.class));
+        System.out.println(cache.get(c.hashCode(), TestClass.class));
 
         for (int i = 0; i < 100; i++) {
             cache.put(new TestClass());
@@ -30,7 +30,11 @@ public class Main {
 
         cache.clear();
         cache.put(c);
-        System.out.println(cache.get("" + c.hashCode(), TestClass.class));
+        System.out.println(cache.get(c.hashCode(), TestClass.class));
+
+        cache.remove(c.hashCode());
+
+        System.out.println(cache.get(c.hashCode(), TestClass.class));
     }
 
 
