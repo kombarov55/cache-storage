@@ -3,9 +3,9 @@ package com.company;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Utils {
+public class SizeStrResolver {
 
-    private Utils() { }
+    private SizeStrResolver() { }
 
     private static Map<String, Integer> sizeSuffixToMultiplier = new HashMap<>();
 

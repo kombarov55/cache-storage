@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 /**
  * Подсчёт размера объектов. Создавался на основе https://habrahabr.ru/post/134102/
  */
-public class ObjectSizeChecker {
+public class MemSizeHelper {
 
     private static final String SYSTEM_ARCH = System.getProperty("os.arch");
     private static final int HEADER_SIZE = SYSTEM_ARCH.contains("32") ? 8 : 16;
@@ -28,7 +28,7 @@ public class ObjectSizeChecker {
         PRIMITIVE_SIZES.put("long", 8);
     }
 
-    private ObjectSizeChecker() { }
+    private MemSizeHelper() { }
 
     public static int getObjectSize(Object obj) throws Exception {
 
@@ -40,6 +40,8 @@ public class ObjectSizeChecker {
         }
 
         for (Field field : type.getDeclaredFields()) {
+            field.setAccessible(true);
+
             if (Modifier.isStatic(field.getModifiers())) continue;
             
             if (field.getType().isPrimitive()) {

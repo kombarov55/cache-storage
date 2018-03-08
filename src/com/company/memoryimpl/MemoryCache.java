@@ -22,7 +22,7 @@ public class MemoryCache implements Cache {
     @Override
     public void put(int id, Object obj) {
         try {
-            int objSize = ObjectSizeChecker.getObjectSize(obj);
+            int objSize = MemSizeHelper.getObjectSize(obj);
             if (memoryCheck(objSize)) {
                 cache.put(id, obj);
                 currentCacheSize += objSize;
@@ -49,7 +49,7 @@ public class MemoryCache implements Cache {
         if (deletedObj == null) return false;
 
         try {
-            currentCacheSize -= ObjectSizeChecker.getObjectSize(deletedObj);
+            currentCacheSize -= MemSizeHelper.getObjectSize(deletedObj);
         } catch (Exception e) {
             e.printStackTrace();
         }
