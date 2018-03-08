@@ -16,7 +16,6 @@ public class CacheStorage {
 
     private static int level;
     private static String cacheDir;
-    private static boolean persistent;
     private static long maxCacheSize;
 
     private static Cache instance;
@@ -59,7 +58,6 @@ public class CacheStorage {
 
         level = Integer.parseInt((String) p.getOrDefault("level", "1"));
         cacheDir = (String) p.getOrDefault("cache-dir", "./cache");
-        persistent = Boolean.parseBoolean((String) p.getOrDefault("persistent", "false"));
         maxCacheSize = SizeStrResolver.resolveSize((String) p.getOrDefault("max-cache-size", "10Kb"));
     }
 

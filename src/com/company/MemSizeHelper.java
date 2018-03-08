@@ -30,7 +30,7 @@ public class MemSizeHelper {
 
     private MemSizeHelper() { }
 
-    public static int getObjectSize(Object obj) throws Exception {
+    public static int getObjectSize(Object obj) {
 
         int totalSize = HEADER_SIZE;
         Class<?> type = obj.getClass();
@@ -48,7 +48,11 @@ public class MemSizeHelper {
                 totalSize += PRIMITIVE_SIZES.get(field.getType().getSimpleName());
             } else {
                 totalSize += REF_SIZE;
-                totalSize += getObjectSize(field.get(obj));
+                try {
+                    totalSize += getObjectSize(field.get(obj));
+                } catch (IllegalAccessException e) {
+                    totalSize += 0;
+                }
             }
         }
 
@@ -56,7 +60,7 @@ public class MemSizeHelper {
     }
 
 
-    private static int getArraySize(Object array) throws Exception {
+    private static int getArraySize(Object array) {
         int totalSize = HEADER_SIZE + ARRAY_LENGTH_VAR_SIZE;
         int arrayLength = Array.getLength(array);
         

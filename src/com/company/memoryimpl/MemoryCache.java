@@ -19,21 +19,21 @@ public class MemoryCache implements Cache {
     }
 
     @Override
-    public void put(int id, Object obj) {
-        try {
-            int objSize = MemSizeHelper.getObjectSize(obj);
-            if (memoryCheck(objSize)) {
-                cache.put(id, obj);
-                currentCacheSize += objSize;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public boolean put(int id, Object obj) {
+        int objSize = MemSizeHelper.getObjectSize(obj);
+        if (memoryCheck(objSize)) {
+            boolean result = cache.put(id, obj) != null;
+            currentCacheSize += objSize;
+
+            return result;
+        } else {
+            return false;
         }
     }
 
     @Override
-    public void put(Object obj) {
-        put(obj.hashCode(), obj);
+    public boolean put(Object obj) {
+        return put(obj.hashCode(), obj);
     }
 
     @Override
@@ -44,18 +44,14 @@ public class MemoryCache implements Cache {
     @Override
     public boolean remove(int id) {
         Object deletedObj = cache.remove(id);
-
         if (deletedObj == null) return false;
-
-        try {
-            currentCacheSize -= MemSizeHelper.getObjectSize(deletedObj);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        currentCacheSize -= MemSizeHelper.getObjectSize(deletedObj);
         return true;
+    }
 
-
+    @Override
+    public int size() {
+        return cache.size();
     }
 
     @Override
@@ -64,7 +60,6 @@ public class MemoryCache implements Cache {
         currentCacheSize = 0;
     }
 
-    //TODO: реалзизовать
     private boolean memoryCheck(int size) {
         return (currentCacheSize + size) < maxCacheSize;
     }
