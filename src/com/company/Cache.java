@@ -12,7 +12,7 @@ public interface Cache {
      * @param id идентификатор.
      *
      */
-    boolean put(int id, Object obj);
+    boolean put(String id, Object obj);
 
     /**
      * Положить объект в кеш. В качестве идентификатора будет использоваться hashcode
@@ -28,7 +28,7 @@ public interface Cache {
      * @param type тип объекта, который необходимо получить
      * @return ссылка на объект если он есть, или null если его нет в кеше.
      */
-    <T> T get(int id, Class<T> type);
+    <T> T get(String id, Class<T> type);
 
     /**
      * Удалить объект из кеша.
@@ -36,7 +36,7 @@ public interface Cache {
      * @param id идентификатор объекта.
      * @return был или не был закеширован объект.
      */
-    boolean remove(int id);
+    boolean remove(String id);
 
     /**
      * Количество объектов в кеше.

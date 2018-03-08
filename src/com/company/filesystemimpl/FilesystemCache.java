@@ -24,35 +24,35 @@ public class FilesystemCache implements Cache {
     }
 
 
-    public boolean put(int id, Object obj) {
+    @Override
+    public boolean put(String id, Object obj) {
         try {
             String data = Marshaller.marshalize(obj);
 
             int objectSize = MemSizeHelper.getObjectSize(data);
 
-            if (memoryCheck(objectSize)) {
+            boolean enoughSpace = memoryCheck(objectSize);
+
+            if (enoughSpace) {
                 fileHandler.writeData(data, id);
                 currentCacheSize += objectSize;
-
-                return true;
-            } else {
-                return false;
             }
 
-
+            return enoughSpace;
 
         } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
     }
 
-
+    @Override
     public boolean put(Object obj) {
-        return put(obj.hashCode(), obj);
+        return put("" + obj.hashCode(), obj);
     }
 
-
-    public <T> T get(int id, Class<T> type) {
+    @Override
+    public <T> T get(String id, Class<T> type) {
         try {
             String data = fileHandler.readData(id);
             return Marshaller.demarshalize(data, type);
@@ -64,8 +64,8 @@ public class FilesystemCache implements Cache {
         }
     }
 
-
-    public boolean remove(int id) {
+    @Override
+    public boolean remove(String id) {
         currentCacheSize -= fileHandler.getFileSize(id);
         return fileHandler.removeFile(id);
     }
@@ -75,6 +75,7 @@ public class FilesystemCache implements Cache {
         return fileHandler.getFilesCount();
     }
 
+    @Override
     public void clear() {
         try {
             fileHandler.clearDir();

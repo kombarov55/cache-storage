@@ -32,8 +32,10 @@ public class CacheStorage {
 
     private static Cache instantiate() {
         try {
+
             loadConfig(PROP_FILE_PATH);
-            validateConfig();
+
+            if (!validateConfig()) throw new RuntimeException("Уровень кеша должен быть 1 или 2");
 
             switch (level) {
                 case 1:
@@ -61,7 +63,7 @@ public class CacheStorage {
         maxCacheSize = SizeStrResolver.resolveSize((String) p.getOrDefault("max-cache-size", "10Kb"));
     }
 
-    private static void validateConfig() {
-        if (level != 1 && level != 2) throw new RuntimeException("Уровень кеша должен быть 1 или 2");
+    private static boolean validateConfig() {
+        return level == 1 || level == 2;
     }
 }

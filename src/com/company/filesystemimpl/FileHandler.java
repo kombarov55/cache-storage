@@ -16,21 +16,21 @@ public class FileHandler {
         this.cacheDir = cacheDir;
     }
 
-    public void writeData(String data, int hashcode) throws IOException {
+    public void writeData(String data, String id) throws IOException {
         Files.write(
-                Paths.get(buildFileRelativeLink(cacheDir, hashcode)),
+                Paths.get(buildFileRelativeLink(cacheDir, id)),
                 data.getBytes(),
                 StandardOpenOption.CREATE, StandardOpenOption.WRITE);
     }
 
-    public String readData(int hashcode) throws IOException {
-        byte[] bytes = Files.readAllBytes(Paths.get(buildFileRelativeLink(cacheDir, hashcode)));
+    public String readData(String id) throws IOException {
+        byte[] bytes = Files.readAllBytes(Paths.get(buildFileRelativeLink(cacheDir, id)));
 
         return new String(bytes);
     }
 
-    public boolean removeFile(int hashcode) {
-        return new File(buildFileRelativeLink(cacheDir, hashcode)).delete();
+    public boolean removeFile(String id) {
+        return new File(buildFileRelativeLink(cacheDir, id)).delete();
     }
 
     public void setupDir() {
@@ -45,7 +45,7 @@ public class FileHandler {
         return new File(cacheDir).list().length;
     }
 
-    public long getFileSize(int id) {
+    public long getFileSize(String id) {
         return new File(buildFileRelativeLink(cacheDir, id)).length();
     }
 
@@ -63,7 +63,7 @@ public class FileHandler {
         }
     }
 
-    private String buildFileRelativeLink(String cacheDir, int id) {
+    private String buildFileRelativeLink(String cacheDir, String id) {
         return cacheDir + "/" + id;
     }
 }
