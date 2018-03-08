@@ -28,10 +28,6 @@ public class Main {
 
         cache.put(new TestClass());
         cache.put(new TestClass());
-        cache.put(new TestClass());
-        cache.put(new TestClass());
-        cache.put(new TestClass());
-        cache.put(new TestClass());
         cache.put(c);
 
         TestClass cc = cache.get(c.hashCode(), TestClass.class);

@@ -38,11 +38,11 @@ public class CacheStorage {
 
             switch (level) {
                 case 1:
-                    return new MemoryCache(maxCacheSize, persistent);
+                    return new MemoryCache(maxCacheSize);
                 case 2:
-                    return new FilesystemCache(maxCacheSize, cacheDir, persistent);
+                    return new FilesystemCache(maxCacheSize, cacheDir);
                 default:
-                    return new MemoryCache(maxCacheSize, persistent);
+                    return new MemoryCache(maxCacheSize);
             }
 
 

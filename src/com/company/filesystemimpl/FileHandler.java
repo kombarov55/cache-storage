@@ -2,9 +2,8 @@ package com.company.filesystemimpl;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * Операции с файлами
@@ -42,10 +41,17 @@ public class FileHandler {
 
     }
 
-    public void clearDir() {
-    }
+    public void clearDir() throws IOException {
+        Path dirPath = Paths.get(cacheDir);
 
-    public long getDirSize() throws IOException {
-        return Files.size(Paths.get(cacheDir));
+        if (Files.exists(dirPath)) {
+            Files.walkFileTree(dirPath, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path path, BasicFileAttributes basicFileAttributes) throws IOException {
+                    Files.delete(path);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        }
     }
 }

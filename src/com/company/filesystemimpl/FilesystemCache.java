@@ -1,40 +1,55 @@
 package com.company.filesystemimpl;
 
 import com.company.Cache;
+import com.company.MemSizeHelper;
 
 import java.io.IOException;
 
 public class FilesystemCache implements Cache {
 
     private final long maxCacheSize;
-    private final boolean persistent;
+    private long currentCacheSize = 0;
 
     private FileHandler fileHandler;
 
-    public FilesystemCache(long maxCacheSize, String cacheDir, boolean persistent) {
-        this.maxCacheSize = maxCacheSize;
-        this.persistent = persistent;
 
+    public FilesystemCache(long maxCacheSize, String cacheDir) {
+        this.maxCacheSize = maxCacheSize;
         fileHandler = new FileHandler(cacheDir);
+        try {
+            fileHandler.clearDir();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         fileHandler.setupDir();
     }
 
-    @Override
+
     public void put(int id, Object obj) {
         try {
             String data = Marshaller.marshalize(obj);
-            fileHandler.writeData(data, id);
-        } catch (IOException e) {
+
+            int objectSize = MemSizeHelper.getObjectSize(data);
+
+            if (memoryCheck(objectSize)) {
+                fileHandler.writeData(data, id);
+                currentCacheSize += objectSize;
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @Override
+
     public void put(Object obj) {
-        put(obj.hashCode(), obj);
+        try {
+            put(obj.hashCode(), obj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
+
     public <T> T get(int id, Class<T> type) {
         try {
             String data = fileHandler.readData(id);
@@ -46,18 +61,24 @@ public class FilesystemCache implements Cache {
         return null;
     }
 
-    @Override
+
     public boolean remove(int id) {
         return fileHandler.removeFile(id);
     }
 
-    @Override
+
     public void clear() {
-        fileHandler.clearDir();
+        try {
+            fileHandler.clearDir();
+            currentCacheSize = 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private boolean memoryCheck() throws IOException {
-        return fileHandler.getDirSize() > maxCacheSize;
+
+    private boolean memoryCheck(int objectSize) {
+        return currentCacheSize + objectSize < maxCacheSize;
     }
 
 

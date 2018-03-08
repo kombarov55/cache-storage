@@ -1,6 +1,7 @@
 package com.company.memoryimpl;
 
 import com.company.Cache;
+import com.company.MemSizeHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,13 +11,11 @@ public class MemoryCache implements Cache {
     private Map<Integer, Object> cache = new HashMap<>();
 
     private final long maxCacheSize;
-    private final boolean persistent;
 
     private long currentCacheSize = 0;
 
-    public MemoryCache(long maxCacheSize, boolean persistent) {
+    public MemoryCache(long maxCacheSize) {
         this.maxCacheSize = maxCacheSize;
-        this.persistent = persistent;
     }
 
     @Override

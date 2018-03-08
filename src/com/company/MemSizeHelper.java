@@ -1,4 +1,4 @@
-package com.company.memoryimpl;
+package com.company;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
