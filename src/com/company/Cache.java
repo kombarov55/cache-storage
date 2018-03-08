@@ -39,6 +39,13 @@ public interface Cache {
     boolean remove(Object id);
 
     /**
+     * Содержит ли кеш в себе объект с переданным идентификатором
+     * @param id идентификатор
+     * @return да / нет
+     */
+    boolean contains(Object id);
+
+    /**
      * Количество объектов в кеше.
      *
      * @return Количество объектов в кеше.

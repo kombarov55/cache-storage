@@ -71,6 +71,11 @@ public class FilesystemCache implements Cache {
     }
 
     @Override
+    public boolean contains(Object id) {
+        return fileHandler.fileExists(id);
+    }
+
+    @Override
     public int size() {
         return fileHandler.getFilesCount();
     }

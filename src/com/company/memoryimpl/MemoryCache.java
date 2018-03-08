@@ -42,6 +42,11 @@ public class MemoryCache implements Cache {
     }
 
     @Override
+    public boolean contains(Object id) {
+        return cache.containsKey(id);
+    }
+
+    @Override
     public boolean remove(Object id) {
         Object deletedObj = cache.remove(id);
         if (deletedObj == null) return false;

@@ -49,6 +49,10 @@ public class FileHandler {
         return new File(buildFileRelativeLink(cacheDir, id)).length();
     }
 
+    public boolean fileExists(Object id) {
+        return new File(buildFileRelativeLink(cacheDir, id)).exists();
+    }
+
     public void clearDir() throws IOException {
         Path dirPath = Paths.get(cacheDir);
 
@@ -56,9 +60,8 @@ public class FileHandler {
             Files.walkFileTree(dirPath, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path path, BasicFileAttributes basicFileAttributes) throws IOException {
-                    if (!Files.isDirectory(path)) {
-                        Files.delete(path);
-                    }
+                    Files.delete(path);
+
                     return FileVisitResult.CONTINUE;
                 }
             });
