@@ -56,7 +56,9 @@ public class FileHandler {
             Files.walkFileTree(dirPath, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path path, BasicFileAttributes basicFileAttributes) throws IOException {
-                    Files.delete(path);
+                    if (!Files.isDirectory(path)) {
+                        Files.delete(path);
+                    }
                     return FileVisitResult.CONTINUE;
                 }
             });

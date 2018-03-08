@@ -79,7 +79,6 @@ public class FilesystemCache implements Cache {
     public void clear() {
         try {
             fileHandler.clearDir();
-            fileHandler.setupDir();
             currentCacheSize = 0;
         } catch (Exception e) {
             throw new RuntimeException("Error while clearing cache directory", e);
